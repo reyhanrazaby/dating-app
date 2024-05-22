@@ -1,4 +1,4 @@
-package main
+package server
 
 import (
 	"bytes"
@@ -11,10 +11,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var testRouter http.Handler
+var r http.Handler
 
 func TestMain(m *testing.M) {
-	testRouter = setUpRoutes()
+	r = GetRoutes()
 	m.Run()
 }
 
@@ -33,7 +33,7 @@ func Test_Success(t *testing.T) {
 		}
 	`)
 	signUpReq, _ := http.NewRequest("POST", signup.Path, bytes.NewBuffer(signUpBody))
-	testRouter.ServeHTTP(signUpRecorder, signUpReq)
+	r.ServeHTTP(signUpRecorder, signUpReq)
 	assert.Equal(t, http.StatusOK, signUpRecorder.Code)
 
 	// Login with registered user
@@ -45,7 +45,7 @@ func Test_Success(t *testing.T) {
 		}
 	`)
 	loginReq, _ := http.NewRequest("POST", login.Path, bytes.NewBuffer(loginBody))
-	testRouter.ServeHTTP(loginRecorder, loginReq)
+	r.ServeHTTP(loginRecorder, loginReq)
 	assert.Equal(t, http.StatusOK, loginRecorder.Code)
 }
 
@@ -64,7 +64,7 @@ func Test_WrongPassword(t *testing.T) {
 		}
 	`)
 	signUpReq, _ := http.NewRequest("POST", signup.Path, bytes.NewBuffer(signUpBody))
-	testRouter.ServeHTTP(signUpRecorder, signUpReq)
+	r.ServeHTTP(signUpRecorder, signUpReq)
 	assert.Equal(t, http.StatusOK, signUpRecorder.Code)
 
 	// Login with wrong password
@@ -76,6 +76,6 @@ func Test_WrongPassword(t *testing.T) {
 		}
 	`)
 	loginReq, _ := http.NewRequest("POST", login.Path, bytes.NewBuffer(loginBody))
-	testRouter.ServeHTTP(loginRecorder, loginReq)
+	r.ServeHTTP(loginRecorder, loginReq)
 	assert.Equal(t, http.StatusBadRequest, loginRecorder.Code)
 }

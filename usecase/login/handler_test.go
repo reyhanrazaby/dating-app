@@ -73,7 +73,7 @@ func Test_EmptyPassword(t *testing.T) {
 func Test_AuthError(t *testing.T) {
 	w := httptest.NewRecorder()
 
-	srvMock.On("Login", "rara@mail.id", "123").Return(errors.AuthError{})
+	srvMock.On("Login", "rara@mail.id", "123").Return(entity.UserProfile{}, errors.AuthError{})
 
 	body := []byte(`
 		{

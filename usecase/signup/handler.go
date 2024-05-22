@@ -9,7 +9,7 @@ import (
 	"github.com/reyhanrazaby/dating-app/util"
 )
 
-var Path = "/logout"
+var Path = "/sign-up"
 var service SignUpService = NewService(inmemory.GetInstance())
 
 func Handler() func(*gin.Context) {

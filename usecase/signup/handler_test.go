@@ -24,10 +24,11 @@ func TestMain(m *testing.M) {
 
 func Test_StatusOK(t *testing.T) {
 	expected := request{
-		FullName: "Rey Raz",
-		Gender:   "M",
-		Email:    "reyraz@mail.id",
-		Password: "1234",
+		FullName:  "Rey Raz",
+		Gender:    "M",
+		Email:     "reyraz@mail.id",
+		Password:  "1234",
+		DateBirth: "22-12-1994",
 	}
 	srvMock.On("SignUp", expected).Return(nil)
 
@@ -38,7 +39,8 @@ func Test_StatusOK(t *testing.T) {
 			"full_name": "Rey Raz",
 			"gender": "M",
 			"email": "reyraz@mail.id",
-			"password": "1234"
+			"password": "1234",
+			"date_birth": "22-12-1994"
 		}
 	`)
 	req, _ := http.NewRequest("POST", Path, bytes.NewBuffer(body))
