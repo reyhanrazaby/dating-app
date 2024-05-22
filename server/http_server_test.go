@@ -54,10 +54,10 @@ func Test_WrongPassword(t *testing.T) {
 	signUpRecorder := httptest.NewRecorder()
 	signUpBody := []byte(`
 		{
-			"full_name": "Rey",
-			"gender": "M",
-			"email": "rey@mail.id",
-			"password": "123",
+			"full_name": "Rey 2",
+			"gender": "F",
+			"email": "rey2@mail.id",
+			"password": "1234",
 			"date_birth": "22-12-1994",
 			"location_lat": -6.8059399341534075,
 			"location_lng": 106.95161161606342
@@ -71,7 +71,7 @@ func Test_WrongPassword(t *testing.T) {
 	loginRecorder := httptest.NewRecorder()
 	loginBody := []byte(`
 		{
-			"email": "rey@mail.id",
+			"email": "rey2@mail.id",
 			"password": "5555"
 		}
 	`)

@@ -9,6 +9,7 @@ Contains RESTful API for sign-up and login feature using Go 1.21.3
 - **entity**: Defines data structure or entities
 - **util**: Contains utility functions
 - **errors**: Defines custom `error`
+- **scripts**: Contains scripts for development or testing
 
 ## How to run
    ```bash
@@ -19,3 +20,18 @@ Contains RESTful API for sign-up and login feature using Go 1.21.3
    ```bash
    go test ./...
    ```
+
+## Test with curl
+- With terminal
+   ```bash
+   bash scripts/[sh file]
+   ```
+   OR
+   ```bash
+   sh scripts/[sh file]
+   ```
+- With Postman
+  - Click import
+  - Paste the `.sh` file content OR choose `scripts` folder to import all tests
+
+  
