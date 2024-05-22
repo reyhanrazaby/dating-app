@@ -1,4 +1,4 @@
-package signup
+package login
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/reyhanrazaby/dating-app/entity"
 	"github.com/reyhanrazaby/dating-app/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -23,20 +24,12 @@ func TestMain(m *testing.M) {
 }
 
 func Test_StatusOK(t *testing.T) {
-	expected := request{
-		FullName: "Rey Raz",
-		Gender:   "M",
-		Email:    "reyraz@mail.id",
-		Password: "1234",
-	}
-	srvMock.On("SignUp", expected).Return(nil)
+	srvMock.On("Login", "reyraz@mail.id", "1234").Return(entity.UserProfile{}, nil)
 
 	w := httptest.NewRecorder()
 
 	body := []byte(`
 		{
-			"full_name": "Rey Raz",
-			"gender": "M",
 			"email": "reyraz@mail.id",
 			"password": "1234"
 		}
@@ -47,14 +40,27 @@ func Test_StatusOK(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
-func Test_EmptyBody(t *testing.T) {
+func Test_EmptyEmail(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	body := []byte(`
 		{
-			"full_name": "",
-			"gender": "",
 			"email": "",
+			"password": "1234"
+		}
+	`)
+	req, _ := http.NewRequest("POST", Path, bytes.NewBuffer(body))
+	router.ServeHTTP(w, req)
+
+	assert.Equal(t, http.StatusBadRequest, w.Code)
+}
+
+func Test_EmptyPassword(t *testing.T) {
+	w := httptest.NewRecorder()
+
+	body := []byte(`
+		{
+			"email": "reyraz@mail.com",
 			"password": ""
 		}
 	`)
@@ -64,15 +70,13 @@ func Test_EmptyBody(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 }
 
-func Test_SignUpError(t *testing.T) {
+func Test_AuthError(t *testing.T) {
 	w := httptest.NewRecorder()
 
-	srvMock.On("SignUp", mock.Anything).Return(errors.SignUpError{})
+	srvMock.On("Login", "rara@mail.id", "123").Return(errors.AuthError{})
 
 	body := []byte(`
 		{
-			"full_name": "Rara",
-			"gender": "F",
 			"email": "rara@mail.id",
 			"password": "123"
 		}
@@ -85,12 +89,16 @@ func Test_SignUpError(t *testing.T) {
 
 type serviceMock struct{ mock.Mock }
 
-func (s *serviceMock) SignUp(req request) error {
-	args := s.Called(req)
+func (s *serviceMock) Login(email, password string) (entity.UserProfile, error) {
+	args := s.Called(email, password)
 	var err error = nil
+	userProfile := entity.UserProfile{}
 
 	if args.Get(0) != nil {
-		err = args.Get(0).(error)
+		userProfile = args.Get(0).(entity.UserProfile)
 	}
-	return err
+	if args.Get(1) != nil {
+		err = args.Get(1).(error)
+	}
+	return userProfile, err
 }

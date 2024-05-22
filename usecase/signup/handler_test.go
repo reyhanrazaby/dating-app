@@ -1,4 +1,4 @@
-package login
+package signup
 
 import (
 	"bytes"
@@ -23,12 +23,20 @@ func TestMain(m *testing.M) {
 }
 
 func Test_StatusOK(t *testing.T) {
-	srvMock.On("Login", "reyraz@mail.id", "1234").Return(nil)
+	expected := request{
+		FullName: "Rey Raz",
+		Gender:   "M",
+		Email:    "reyraz@mail.id",
+		Password: "1234",
+	}
+	srvMock.On("SignUp", expected).Return(nil)
 
 	w := httptest.NewRecorder()
 
 	body := []byte(`
 		{
+			"full_name": "Rey Raz",
+			"gender": "M",
 			"email": "reyraz@mail.id",
 			"password": "1234"
 		}
@@ -39,13 +47,16 @@ func Test_StatusOK(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 }
 
-func Test_EmptyEmail(t *testing.T) {
+func Test_EmptyRequiredFields(t *testing.T) {
 	w := httptest.NewRecorder()
 
 	body := []byte(`
 		{
-			"email": "",
-			"password": "1234"
+			"full_name": "",
+			"gender": "M",
+			"email": "rey@mail.id",
+			"password": "123",
+			"date_birth": "22-12-1994"
 		}
 	`)
 	req, _ := http.NewRequest("POST", Path, bytes.NewBuffer(body))
@@ -54,30 +65,18 @@ func Test_EmptyEmail(t *testing.T) {
 	assert.Equal(t, http.StatusBadRequest, w.Code)
 }
 
-func Test_EmptyPassword(t *testing.T) {
+func Test_SignUpError(t *testing.T) {
 	w := httptest.NewRecorder()
+
+	srvMock.On("SignUp", mock.Anything).Return(errors.SignUpError{})
 
 	body := []byte(`
 		{
-			"email": "reyraz@mail.com",
-			"password": ""
-		}
-	`)
-	req, _ := http.NewRequest("POST", Path, bytes.NewBuffer(body))
-	router.ServeHTTP(w, req)
-
-	assert.Equal(t, http.StatusBadRequest, w.Code)
-}
-
-func Test_AuthError(t *testing.T) {
-	w := httptest.NewRecorder()
-
-	srvMock.On("Login", "rara@mail.id", "123").Return(errors.AuthError{})
-
-	body := []byte(`
-		{
-			"email": "rara@mail.id",
-			"password": "123"
+			"full_name": "Rey",
+			"gender": "M",
+			"email": "rey@mail.id",
+			"password": "123",
+			"date_birth": "22-12-1994",
 		}
 	`)
 	req, _ := http.NewRequest("POST", Path, bytes.NewBuffer(body))
@@ -88,8 +87,8 @@ func Test_AuthError(t *testing.T) {
 
 type serviceMock struct{ mock.Mock }
 
-func (s *serviceMock) Login(email, password string) error {
-	args := s.Called(email, password)
+func (s *serviceMock) SignUp(req request) error {
+	args := s.Called(req)
 	var err error = nil
 
 	if args.Get(0) != nil {

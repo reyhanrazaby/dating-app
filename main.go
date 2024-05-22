@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/reyhanrazaby/dating-app/domain/login"
-	"github.com/reyhanrazaby/dating-app/domain/signup"
+	"github.com/reyhanrazaby/dating-app/usecase/login"
+	"github.com/reyhanrazaby/dating-app/usecase/signup"
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +27,7 @@ func setUpRoutes() http.Handler {
 	router.Use(gin.CustomRecovery(panicHandler))
 
 	router.POST(login.Path, login.Handler())
-	router.POST("/sign-up", signup.Handler())
+	router.POST(signup.Path, signup.Handler())
 
 	return router
 }

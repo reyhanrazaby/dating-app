@@ -4,12 +4,13 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/reyhanrazaby/dating-app/datasource/inmemory"
 	"github.com/reyhanrazaby/dating-app/errors"
 	"github.com/reyhanrazaby/dating-app/util"
 )
 
 var Path = "/logout"
-var service SignUpService = NewService()
+var service SignUpService = NewService(inmemory.GetInstance())
 
 func Handler() func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -41,10 +42,14 @@ func Handler() func(*gin.Context) {
 }
 
 type request struct {
-	FullName string `json:"full_name" binding:"required"`
-	Gender   string `json:"gender" binding:"required"`
-	Email    string `json:"email" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	FullName    string  `json:"full_name" binding:"required"`
+	Gender      string  `json:"gender" binding:"required"`
+	Email       string  `json:"email" binding:"required"`
+	Password    string  `json:"password" binding:"required"`
+	DateBirth   string  `json:"date_birth" binding:"required"`
+	Bio         string  `json:"bio"`
+	LocationLat float32 `json:"location_lat"`
+	LocationLng float32 `json:"location_lng"`
 }
 
 type response struct {
