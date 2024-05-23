@@ -1,0 +1,11 @@
+# Options for analysis running.
+run:
+  concurrency: 4
+  timeout: 5m
+  go: '1.21'
+linters:
+  enable:
+    - usestdlibvars
+    - misspell
+    - inamedparam
+  fast: true

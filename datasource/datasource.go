@@ -5,6 +5,6 @@ import (
 )
 
 type Repo interface {
-	SaveUserAuth(entity.UserAuth) error
-	GetUserAuthByEmail(string) *entity.UserAuth
+	SaveUserAuth(userAuth entity.UserAuth) error
+	GetUserAuthByEmail(email string) *entity.UserAuth
 }

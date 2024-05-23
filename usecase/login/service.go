@@ -8,7 +8,7 @@ import (
 )
 
 type LoginService interface {
-	Login(string, string) (entity.UserProfile, error)
+	Login(email, password string) (entity.UserProfile, error)
 }
 
 func NewService(repo datasource.Repo) LoginService {

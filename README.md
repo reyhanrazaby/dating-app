@@ -9,7 +9,7 @@ Contains RESTful API for sign-up and login feature using Go 1.21.3
 - **entity**: Defines data structure or entities
 - **util**: Contains utility functions
 - **errors**: Defines custom `error`
-- **scripts**: Contains scripts for development or testing
+- **scripts**: Contains scripts for deployment, testing, etc
 
 ## How to run
    ```bash
@@ -22,16 +22,24 @@ Contains RESTful API for sign-up and login feature using Go 1.21.3
    ```
 
 ## Test with curl
-- With terminal
+#### With terminal
    ```bash
-   bash scripts/[sh file]
+   bash scripts/login_curl.sh
+   bash scripts/sign_up_curl.sh
    ```
-   OR
-   ```bash
-   sh scripts/[sh file]
-   ```
-- With Postman
+#### With Postman
   - Click import
-  - Paste the `.sh` file content OR choose `scripts` folder to import all tests
+  - Paste the content of `_curl.sh` file you want to test
 
+## Deployment (to docker)
+Make sure docker is running before executing this script
+```bash
+bash scripts/deploy.sh
+```
+
+## Linter
+Make sure docker is running before executing this script
+```bash
+bash scripts/linter.sh
+```
   
