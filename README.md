@@ -24,8 +24,8 @@ Contains RESTful API for sign-up and login feature using Go 1.21.3
 ## Test with curl
 #### With terminal
    ```bash
-   bash scripts/login_curl.sh
    bash scripts/sign_up_curl.sh
+   bash scripts/login_curl.sh
    ```
 #### With Postman
   - Click import
